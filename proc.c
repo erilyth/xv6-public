@@ -52,6 +52,7 @@ found:
   p->rtime=0;
   p->rtime=0;
   p->iotime=0;
+  p->priority=60;
   release(&ptable.lock);
 
   // Allocate kernel stack.
@@ -275,13 +276,18 @@ scheduler(void)
   for(;;){
     // Enable interrupts on this processor.
     sti();
-
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
+    int priorMinFound=100;
+    for(p = ptable.proc; p< &ptable.proc[NPROC];p++){
+      if(p->state==RUNNABLE && p->priority<priorMinFound){
+        priorMinFound=p->priority;
+      }
+    }
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-      if(p->state != RUNNABLE)
+      if(p->state != RUNNABLE || p->priority!=priorMinFound)
         continue;
-
+     
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
@@ -291,9 +297,19 @@ scheduler(void)
       swtch(&cpu->scheduler, proc->context);
       switchkvm();
 
+
+      //cprintf("Found min priority as %d\n", priorMinFound);
+      
+      
       // Process is done running for now.
       // It should have changed its p->state before coming back.
       proc = 0;
+      priorMinFound=100;
+      for(p = ptable.proc; p< &ptable.proc[NPROC];p++){
+    	if(p->state==RUNNABLE && p->priority<priorMinFound){
+	  priorMinFound=p->priority;
+	}
+      }
     }
     release(&ptable.lock);
 
