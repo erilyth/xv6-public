@@ -16,9 +16,12 @@ sys_waitx(int *wtime, int *rtime)
   fetchint(a,&a1);
   argint(1,&b);
   fetchint(b,&b1);
-  cprintf("%d %d\n", a1,b1);
-
-  cprintf("%d %d\n",cpu->proc->rtime,cpu->proc->iotime);
+  //cprintf("%d %d\n", a1,b1);
+  //cprintf("%d %d\n",cpu->proc->rtime,cpu->proc->iotime);
+  int totTime=cpu->proc->rtime;
+  int totSleepTime=cpu->proc->iotime;
+  setint(a,&totTime);
+  setint(b,&totSleepTime);
   //cprintf("HI");
   return wait();
 }

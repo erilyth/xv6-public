@@ -13,6 +13,16 @@
 // library system call function. The saved user %esp points
 // to a saved program counter, and then the first argument.
 
+// Set the int at addr from the current process.
+int
+setint(uint addr, int *ip)
+{
+  if(addr >=proc->sz || addr+4 > proc->sz)
+    return -1;
+  *(int*)(addr)=*ip;
+  return 0;
+}
+
 // Fetch the int at addr from the current process.
 int
 fetchint(uint addr, int *ip)

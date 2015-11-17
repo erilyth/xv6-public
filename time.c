@@ -11,8 +11,8 @@ main(int argc, char *argv[])
   //}
   int a=10;
   int b=100;
-  waitx(&a,&b);
   printf(2,"%d %d\n", a, b);
-  // your code to print the time in any format you like...
+  waitx(&a,&b);
+  printf(2,"%d %d YE?\n", a, b);
   exit();
 }
