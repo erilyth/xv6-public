@@ -8,6 +8,20 @@
 #include "proc.h"
 
 int
+sys_set_priority(int *newprio)
+{
+  int oldPrio=cpu->proc->priority;
+  int val,addr;
+  argint(0,&addr);
+  fetchint(addr,&val);
+  cpu->proc->priority=val;
+  if(val>oldPrio){
+    yield();
+  }
+  return oldPrio;
+}
+
+int
 sys_waitx(int *wtime, int *rtime)
 {
   int a,b;
