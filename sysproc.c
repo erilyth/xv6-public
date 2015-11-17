@@ -8,6 +8,22 @@
 #include "proc.h"
 
 int
+sys_waitx(int *wtime, int *rtime)
+{
+  int a,b;
+  int a1,b1;
+  argint(0,&a);
+  fetchint(a,&a1);
+  argint(1,&b);
+  fetchint(b,&b1);
+  cprintf("%d %d\n", a1,b1);
+
+  cprintf("%d %d\n",cpu->proc->rtime,cpu->proc->iotime);
+  //cprintf("HI");
+  return wait();
+}
+
+int
 sys_fork(void)
 {
   return fork();

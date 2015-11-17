@@ -92,6 +92,7 @@ trap(struct trapframe *tf)
             proc->pid, proc->name, tf->trapno, tf->err, cpu->id, tf->eip, 
             rcr2());
     proc->killed = 1;
+    proc->etime=proc->rtime;
   }
 
   // Force process exit if it has been killed and is in user space.
@@ -102,9 +103,17 @@ trap(struct trapframe *tf)
 
   // Force process to give up CPU on clock tick.
   // If interrupts were on while locks held, would need to check nlock.
-  if(proc && proc->state == RUNNING && tf->trapno == T_IRQ0+IRQ_TIMER)
-    yield();
-
+  if(proc){
+	  if(proc->state == RUNNING && tf->trapno == T_IRQ0+IRQ_TIMER)
+  	  {
+	 	 proc->rtime++;
+	 	 yield();
+  	  }
+	  if(proc->state == SLEEPING && tf->trapno == T_IRQ0+IRQ_TIMER)
+	  {
+	  	proc->iotime++;
+	  }
+  }
   // Check if the process has been killed since we yielded
   if(proc && proc->killed && (tf->cs&3) == DPL_USER)
     exit();
