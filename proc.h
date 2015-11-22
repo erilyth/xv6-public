@@ -16,6 +16,8 @@ struct cpu {
   struct proc *proc;           // The currently-running process.
 };
 
+extern void add_sleep(void);
+
 extern struct cpu cpus[NCPU];
 extern int ncpu;
 

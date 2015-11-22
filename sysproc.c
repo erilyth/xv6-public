@@ -33,6 +33,7 @@ sys_waitx(int *wtime, int *rtime)
   //cprintf("%d %d\n", a1,b1);
   //cprintf("%d %d\n",cpu->proc->rtime,cpu->proc->iotime);
   int totTime=cpu->proc->rtime;
+  cprintf("%d MY\n", cpu->proc->pid);
   int totSleepTime=cpu->proc->iotime;
   setint(a,&totTime);
   setint(b,&totSleepTime);

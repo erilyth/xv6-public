@@ -26,6 +26,18 @@ pinit(void)
   initlock(&ptable.lock, "ptable");
 }
 
+void add_sleep(void){
+  struct proc *p;
+  //cprintf("IT %d\n", ptable.proc);
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+  	//cprintf("%d\n", p->pid);
+	if(p->state==SLEEPING){
+		p->iotime++;
+		p->etime++;
+	}
+  }
+}
+
 //PAGEBREAK: 32
 // Look in the process table for an UNUSED proc.
 // If found, change state to EMBRYO and initialize
@@ -47,8 +59,10 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
-  p->ctime=0;
-  p->etime=0;
+  acquire(&tickslock);
+  p->ctime=ticks;
+  p->etime=ticks;
+  release(&tickslock);
   p->rtime=0;
   p->rtime=0;
   p->iotime=0;
@@ -278,14 +292,14 @@ scheduler(void)
     sti();
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
-    int priorMinFound=100;
+    /*int priorMinFound=100;
     for(p = ptable.proc; p< &ptable.proc[NPROC];p++){
       if(p->state==RUNNABLE && p->priority<priorMinFound){
         priorMinFound=p->priority;
       }
-    }
+    }*/
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-      if(p->state != RUNNABLE || p->priority!=priorMinFound)
+      if(p->state != RUNNABLE) //|| p->priority!=priorMinFound)
         continue;
      
       // Switch to chosen process.  It is the process's job
@@ -304,12 +318,12 @@ scheduler(void)
       // Process is done running for now.
       // It should have changed its p->state before coming back.
       proc = 0;
-      priorMinFound=100;
+      /*priorMinFound=100;
       for(p = ptable.proc; p< &ptable.proc[NPROC];p++){
     	if(p->state==RUNNABLE && p->priority<priorMinFound){
 	  priorMinFound=p->priority;
 	}
-      }
+      }*/
     }
     release(&ptable.lock);
 
