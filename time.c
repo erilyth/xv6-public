@@ -27,18 +27,18 @@ main(int argc, char *argv[])
 		cc++;
 	exit();
   }
-  int p2=fork();
+  /*int p2=fork();
   if(p2==0){
   	int ccc=0;
 	while(ccc<1000000)
 		ccc++;
 	exit();
   }
-  wait();
+  wait();*/
   wait();
   //sleep(100);
   waitx(&a,&b);
-  printf(2,"%d %d YE?\n", a, b);
+  printf(1,"%d %d YE?\n", a, b);
   //printf(2,"%d OLD PRIO", t);
   exit();
 }

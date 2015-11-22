@@ -30,9 +30,9 @@ void add_sleep(void){
   struct proc *p;
   //cprintf("IT %d\n", ptable.proc);
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-  	//cprintf("%d\n", p->pid);
 	if(p->state==SLEEPING){
 		p->iotime++;
+  		//cprintf("%d\n", p->pid);
 		p->etime++;
 	}
   }
